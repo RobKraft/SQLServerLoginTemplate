@@ -192,6 +192,7 @@ namespace SQLServerLoginTemplate
 
 			comboBoxAuthentication.Items.Add(_WINDOWSAUTH);
 			comboBoxAuthentication.Items.Add(_SQLAUTH);
+			comboBoxAuthentication.Text = _WINDOWSAUTH;
 			comboBoxAuthentication.DropDownStyle = ComboBoxStyle.DropDownList;
 
 			comboBoxServerType.Items.Add("Database Engine");
