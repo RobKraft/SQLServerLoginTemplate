@@ -58,11 +58,20 @@ namespace SQLServerLoginTemplate
 
 		private void buttonConnect_Click(object sender, EventArgs e)
 		{
-			SaveLatestUserLoginCredentials();
-			Application.Exit();
-		}
+			EnableOrDisableAllFields(false);
+			if (TestUserCredentials())
+			{
+				Properties.Settings.Default.Save();
+				this.Close();
+			}
+			else
+			{
+				EnableOrDisableAllFields(true);
+				EnableOrDisableFields(comboBoxAuthentication.Text.Equals(_SQLAUTH));
 
-		private void SaveLatestUserLoginCredentials()
+			}
+		}
+		private bool TestUserCredentials()
 		{
 			string selectedServer = comboBoxServerName.Text.Trim();
 			string authType = comboBoxAuthentication.Text.Trim();
@@ -106,8 +115,30 @@ namespace SQLServerLoginTemplate
 			{
 				Properties.Settings.Default.ConcatStuff.Add(concat);
 			}
-			Properties.Settings.Default.Save();
+			string login = "Integrated Security=true";
+			if (authType.Equals(_SQLAUTH))
+			{
+				login = $"user id={selectedLogin};password={textBoxPassword.Text.Trim()}";
+			}
+			return AttemptDatabaseConnection("Data Source=" + selectedServer + ";" + login, selectedServer);
 		}
+		private bool AttemptDatabaseConnection(string connString, string selectedServer)
+		{
+			try
+			{
+				using (System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connString))
+				{
+					conn.Open();
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Cannot connect to " + selectedServer + "." + Environment.NewLine + Environment.NewLine + "Additional information: " + Environment.NewLine + ex.Message, "Connect to Server", MessageBoxButtons.OK);
+				return false;
+			}
+			return true;
+		}
+
 
 		private void comboBoxServerName_SelectedIndexChanged(object sender, EventArgs e)
 		{
@@ -172,19 +203,38 @@ namespace SQLServerLoginTemplate
 			}
 		}
 
+		private void EnableOrDisableAllFields(bool enable)
+		{
+			EnableOrDisableFields(enable);
+			comboBoxAuthentication.Enabled = enable;
+			comboBoxServerName.Enabled = enable;
+			labelAuthentication.Enabled = enable;
+			labelServerName.Enabled = enable;
+			comboBoxServerType.Enabled = enable;
+			labelServerType.Enabled = enable;
+			buttonConnect.Enabled = enable;
+			buttonCancel.Enabled = enable; //The real SQL Server UI allows you to cancel
+		}
+
 		private void EnableDisableBasedOnAuthMethod(bool sqlAuth)
 		{
-			comboBoxLogin.Enabled = sqlAuth;
-			textBoxPassword.Enabled = sqlAuth;
-			checkBoxRememberPassword.Enabled = sqlAuth;
-			labelLogin.Enabled = sqlAuth;
-			labelPassword.Enabled = sqlAuth;
-			if (sqlAuth==false)
+			EnableOrDisableFields(sqlAuth);
+			if (sqlAuth == false)
 			{
 				comboBoxLogin.Text = "";
 				textBoxPassword.Text = "";
 			}
 		}
+
+		private void EnableOrDisableFields(bool enable)
+		{
+			comboBoxLogin.Enabled = enable;
+			textBoxPassword.Enabled = enable;
+			checkBoxRememberPassword.Enabled = enable;
+			labelLogin.Enabled = enable;
+			labelPassword.Enabled = enable;
+		}
+
 		private void LoadSharedDefaultValues()
 		{
 			buttonHelp.Visible = false;
