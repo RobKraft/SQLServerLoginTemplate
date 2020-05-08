@@ -110,6 +110,7 @@
 			// 
 			// buttonConnect
 			// 
+			this.buttonConnect.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.buttonConnect.Location = new System.Drawing.Point(486, 690);
 			this.buttonConnect.Name = "buttonConnect";
 			this.buttonConnect.Size = new System.Drawing.Size(232, 61);
