@@ -18,6 +18,7 @@ namespace SQLServerLoginTemplate
 		private readonly string _LOGINTYPESQL = "1";
 		private readonly string _SERVERANDUSERSEPARATOR = "@&";
 		private readonly string _USERANDPASSWORDSEPARATOR = "~~~";
+		public string ConnectionString = ""; //The code that calls this form should retrieve the connection string from this public property
 		public FormConnectToSQLServer()
 		{
 			InitializeComponent();
@@ -129,6 +130,7 @@ namespace SQLServerLoginTemplate
 				using (System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connString))
 				{
 					conn.Open();
+					ConnectionString = connString; //The code that calls this form should retrieve the connection string from this public property
 				}
 			}
 			catch (Exception ex)
