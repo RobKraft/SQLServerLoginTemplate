@@ -69,7 +69,7 @@ namespace SQLServerLoginTemplate
 			{
 				EnableOrDisableAllFields(true);
 				EnableOrDisableFields(comboBoxAuthentication.Text.Equals(_SQLAUTH));
-
+				this.DialogResult = DialogResult.None;
 			}
 		}
 		private bool TestUserCredentials()
