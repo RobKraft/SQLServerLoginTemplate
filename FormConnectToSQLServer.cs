@@ -26,7 +26,8 @@ namespace SQLServerLoginTemplate
 
 		private void buttonCancel_Click(object sender, EventArgs e)
 		{
-			Application.Exit();
+			this.DialogResult = DialogResult.Cancel;
+			this.Close();
 		}
 		private void FormConnectToSQLServer_Load(object sender, EventArgs e)
 		{
