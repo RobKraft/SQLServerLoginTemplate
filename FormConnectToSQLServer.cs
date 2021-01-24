@@ -31,9 +31,28 @@ namespace SQLServerLoginTemplate
 		}
 		private void FormConnectToSQLServer_Load(object sender, EventArgs e)
 		{
+			GetDPI();
 			LoadSharedDefaultValues();
 			InitializePropertiesForFirstTimeUsers();
 			LoadLastServerSelectedByThisUser();
+			FormConnectToSQLServer_Resize(sender, e);
+		}
+		bool _highDPI = false;
+		private void GetDPI()
+		{
+			float dx, dy;
+			Graphics g = this.CreateGraphics();
+			try
+			{
+				dx = g.DpiX;
+				dy = g.DpiY;
+				if (dx > 96)
+					_highDPI = true;
+			}
+			finally
+			{
+				g.Dispose();
+			}
 		}
 		public void LoadLastServerSelectedByThisUser()
 		{
@@ -253,5 +272,20 @@ namespace SQLServerLoginTemplate
 			comboBoxServerType.DropDownStyle = ComboBoxStyle.DropDownList;
 		}
 		#endregion
+
+		private void FormConnectToSQLServer_Resize(object sender, EventArgs e)
+		{
+			int rightoffset = 64;
+			if (!_highDPI)
+			{
+				rightoffset = 28;
+				this.Height = 320;
+			}
+			comboBoxServerType.Width = this.Width - comboBoxServerType.Left - rightoffset;
+			comboBoxServerName.Width = this.Width - comboBoxServerName.Left - rightoffset;
+			comboBoxLogin.Width = this.Width - comboBoxLogin.Left - rightoffset;
+			comboBoxAuthentication.Width = this.Width - comboBoxAuthentication.Left - rightoffset;
+			textBoxPassword.Width = this.Width - textBoxPassword.Left - rightoffset;
+		}
 	}
 }

@@ -231,6 +231,7 @@
 			this.Name = "FormConnectToSQLServer";
 			this.Text = "Connect to Server";
 			this.Load += new System.EventHandler(this.FormConnectToSQLServer_Load);
+			this.Resize += new System.EventHandler(this.FormConnectToSQLServer_Resize);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
